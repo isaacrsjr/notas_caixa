@@ -2,38 +2,67 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 					
-var notas = new int [] {200,100,50,20,10,2,5};
-var notasUsadas = new List<Nota>();
+var valorNotas = new int [] { 200,100,50,20,10,2 };
+var notasUsadas = new Dictionary<int, Nota>();
 
-var qtd = 33;
+int qtd = ObterQuantidade();
 var resto = qtd;
 
 if (resto % 2 == 1)
 {
-	notasUsadas.Add(new Nota(5));
+	notasUsadas.Add(5, new Nota(5));
 	resto -= 5;
 }
 
 while (resto > 0)
 {
-	int maiorNota = notas.Where(n => n <= resto).First();
-	notasUsadas.Add(new Nota(maiorNota));
+	int maiorNota = valorNotas.Where(n => n <= resto).First();
+	if (notasUsadas.ContainsKey(maiorNota))
+		notasUsadas[maiorNota].IncrementarQuantidade();
+	else
+		notasUsadas.Add(maiorNota, new Nota(maiorNota));
 	resto -= maiorNota;
 }
 
-int provaReal = 0;
-foreach (Nota n in notasUsadas)
-{
-	Console.WriteLine(n.valor);	
-	provaReal += n.valor;
+ImprimirResultados(notasUsadas.Values.OrderBy(n => n.valor));
+return 0;
+
+int ObterQuantidade() {
+	int qtd = 0;
+	while (qtd < 5)
+	{
+		Console.Write("Digite o valor inteiro em reais: R$");
+		if (!int.TryParse(Console.ReadLine(), out qtd))
+		{
+			Console.WriteLine("Você não digitou um valor válido!");
+			continue;
+		}
+		if (qtd == 2)
+		{
+			Console.WriteLine(new Nota(2));
+			return 0;
+		}
+		if (qtd < 5) 
+		{
+			Console.WriteLine("Você deve digitar uma valor maior ou igual a 5 ou 2!");
+			qtd = 0;
+			continue;
+		}
+	}
+	return qtd;
 }
 
-Console.WriteLine(provaReal == qtd? "Certo": "Errado");
+void ImprimirResultados(IEnumerable<Nota> notas)
+{
+	Console.WriteLine("\n***** RESULTADO *****");
 
-public class Nota {
-		public readonly int valor;
-	
-	    public Nota (int valor){
-			this.valor =valor;	
-		}  
+	int provaReal = 0;
+	foreach (Nota n in notas)
+	{
+		Console.WriteLine(n);	
+		provaReal += n.valor*n.quantidade;
+	}
+
+	Console.Write("\r\nProva real: ");
+	Console.WriteLine(provaReal == qtd? "Certo": "Errado");
 }
