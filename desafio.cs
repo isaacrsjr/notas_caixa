@@ -39,12 +39,15 @@ int ObterQuantidade() {
 		}
 		if (qtd == 2)
 		{
-			Console.WriteLine(new Nota(2));
-			return 0;
+			return 2;
 		}
-		if (qtd < 5) 
+		else if (qtd == 4)
 		{
-			Console.WriteLine("Você deve digitar uma valor maior ou igual a 5 ou 2!");
+			return 4;
+		}
+		else if (qtd < 5) 
+		{
+			Console.WriteLine("Você deve digitar uma valor maior ou igual a 5 ou 2 ou 4!");
 			qtd = 0;
 			continue;
 		}
